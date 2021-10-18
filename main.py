@@ -2,17 +2,13 @@
 Sean Lim
 10/16/2021
 
-A machine learning model that classifies news headlines into 'satirical' or 'not satirical' categories
+Using machine learning models to classify news headlines into 'satirical' or 'not satirical' categories
 """
 
 import pandas as pd
 import json
-from sklearn.linear_model import LogisticRegression, SGDClassifier
 from sklearn.svm import SVC
-from sklearn.naive_bayes import GaussianNB, MultinomialNB
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import classification_report, confusion_matrix
 
@@ -35,7 +31,9 @@ train_x_vector = tfidf.fit_transform(train_x)
 test_x_vector = tfidf.transform(test_x)
 
 # SVC
-svc = SVC(kernel='linear')
+svc = SVC(kernel='rbf')
+
+'''
 svc.fit(train_x_vector, train_y)
 
 print("SVC: " + str(svc.score(test_x_vector, test_y)))
@@ -43,7 +41,9 @@ print("SVC: " + str(svc.score(test_x_vector, test_y)))
 print(classification_report(test_y, svc.predict(test_x_vector)))
 
 print(confusion_matrix(test_y, svc.predict(test_x_vector)))
+'''
 
+'''
 # Decision Tree
 dec_tree = DecisionTreeClassifier()
 dec_tree.fit(train_x_vector, train_y)
@@ -56,9 +56,15 @@ gnb.fit(train_x_vector.toarray(), train_y)
 
 print("GNB: " + str(gnb.score(test_x_vector.toarray(), test_y)))
 
-'''
+
 print(svc.predict(tfidf.transform(
     ['Intergalactic Animal Rights Groups Condemn Use Of Brutal, Unsanitary Planet To Raise Human Meat'])))
-print(svc.predict(tfidf.transform(['Most Terrifying Ways The Government Is Spying On You'])))
 print(svc.predict(tfidf.transform(['Remington Introduces Ammunition For Sensitive Skin'])))
+print(svc.predict(tfidf.transform(['Most Terrifying Ways The Government Is Spying On You'])))
 '''
+
+parameters = {'C': [7, 7.5, 8, 8.5, 9], 'kernel': ['linear', 'rbf']}
+grid_search = GridSearchCV(svc, parameters, cv=5)
+grid_search.fit(train_x_vector, train_y)
+print(grid_search.best_params_)
+print(classification_report(test_y, grid_search.predict(test_x_vector)))
