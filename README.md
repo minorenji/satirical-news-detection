@@ -87,3 +87,22 @@ Nonetheless, I reran GridSearchCV with a narrower parameter range:
 ```python
 parameters = {'C': [7, 7.5, 8, 8.5, 9], 'kernel': ['linear', 'rbf']}
 ```
+This time the output was `{'C': 7, 'kernel': 'rbf'}`, but the accuracy did not actually improve. Or at least not by a whole entire percentage point, because the f1-score was 80%. For good measure, I ran GridSearchCV a couple more times with shifted parameters each time.
+
+The final parameters I arrived at were `{'C': 5.2, 'kernel': 'rbf'}` although the accuracy did not actually improve visibly.
+
+### Results
+Ultimately, I was able to reach a 0.80 f1-score. I also tested the model on some articles outside of the dataset from The Onion:
+```python
+print(svc.predict(tfidf.transform(
+    ['Intergalactic Animal Rights Groups Condemn Use Of Brutal, Unsanitary Planet To Raise Human Meat'])))
+print(svc.predict(tfidf.transform(['Remington Introduces Ammunition For Sensitive Skin'])))
+print(svc.predict(tfidf.transform(['Most Terrifying Ways The Government Is Spying On You'])))
+```
+which returned:
+```markdown
+[1]
+[1]
+[0]
+```
+which is correct except the last one. The last one was probably marked as not satirical because just based on the headline, it is a plausible news story. The satire was mostly in the actual text which this model does not take into account.

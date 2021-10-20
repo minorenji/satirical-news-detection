@@ -31,7 +31,8 @@ train_x_vector = tfidf.fit_transform(train_x)
 test_x_vector = tfidf.transform(test_x)
 
 # SVC
-svc = SVC(kernel='rbf')
+svc = SVC(C=5.2, kernel='rbf')
+svc.fit(train_x_vector, train_y)
 
 '''
 svc.fit(train_x_vector, train_y)
@@ -63,8 +64,14 @@ print(svc.predict(tfidf.transform(['Remington Introduces Ammunition For Sensitiv
 print(svc.predict(tfidf.transform(['Most Terrifying Ways The Government Is Spying On You'])))
 '''
 
-parameters = {'C': [7, 7.5, 8, 8.5, 9], 'kernel': ['linear', 'rbf']}
-grid_search = GridSearchCV(svc, parameters, cv=5)
-grid_search.fit(train_x_vector, train_y)
-print(grid_search.best_params_)
-print(classification_report(test_y, grid_search.predict(test_x_vector)))
+
+# parameters = {'C': [5, 5.2, 5.4, 5.6, 5.8], 'kernel': ['linear', 'rbf']}
+# grid_search = GridSearchCV(svc, parameters, cv=5)
+# grid_search.fit(train_x_vector, train_y)
+# print(grid_search.best_params_)
+# print(classification_report(test_y, grid_search.predict(test_x_vector)))
+
+print(svc.predict(tfidf.transform(
+    ['Intergalactic Animal Rights Groups Condemn Use Of Brutal, Unsanitary Planet To Raise Human Meat'])))
+print(svc.predict(tfidf.transform(['Remington Introduces Ammunition For Sensitive Skin'])))
+print(svc.predict(tfidf.transform(['Most Terrifying Ways The Government Is Spying On You'])))
